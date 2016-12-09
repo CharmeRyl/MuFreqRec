@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CustomToolbar" parent="@android:style/TextAppearance.Material.Widget.Toolbar.Title">
+        <item name="android:textStyle">normal</item>
+
+    </style>
+
+</resources>
