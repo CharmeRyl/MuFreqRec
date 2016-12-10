@@ -41,6 +41,9 @@ public class PermissionRequest {
 
     public void request(){
         this.checkPermissions();
+        if(this.permissionsRequestList.size()==0){
+            return;
+        }
         ActivityCompat.requestPermissions(this.activity,
                 this.permissionsRequestList.toArray(new String[this.permissionsRequestList.size()]),
                 this.REQUEST_CODE);
