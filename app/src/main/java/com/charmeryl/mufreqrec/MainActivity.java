@@ -1,8 +1,12 @@
 package com.charmeryl.mufreqrec;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -13,8 +17,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.charmeryl.mufreqrec.listener.*;
+import com.charmeryl.mufreqrec.utils.PermissionRequest;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        requestPermissions();
         initialView();
         getPref();
 
@@ -62,6 +70,40 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+        switch (requestCode) {
+            case 1:
+                for (int i=0; i<permissions.length; i++) {
+                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+
+                    } else {
+                        AlertDialog dialog = new AlertDialog.Builder(this)
+                                .setTitle("Error")
+                                .setMessage("You should approve record and storage permissions, otherwise the application will not work!")
+                                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog) {
+                                        onBackPressed();
+                                    }
+                                })
+                                .create();
+                        dialog.show();
+                    }
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void requestPermissions(){
+        PermissionRequest permissionRequest = new PermissionRequest(this);
+        permissionRequest.addPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .addPermission(Manifest.permission.RECORD_AUDIO);
+        permissionRequest.request();
     }
 
     private void initialView(){
