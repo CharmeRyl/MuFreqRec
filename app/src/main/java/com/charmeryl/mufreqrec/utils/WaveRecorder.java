@@ -19,6 +19,7 @@ public class WaveRecorder {
     private int samp_rate = 48000;
     private String path_prefix;
     private String save_path = "/rec/record.pcm";
+    private int audio_format = AudioFormat.CHANNEL_IN_STEREO;
 
     private boolean isRecording = false;
     private int buf_size;
@@ -46,15 +47,30 @@ public class WaveRecorder {
         return this;
     }
 
+    public WaveRecorder setRecMode(int mode) {
+        switch (mode) {
+            case 1: //handset
+                this.audio_format = AudioFormat.CHANNEL_IN_STEREO;
+                break;
+            case 2: //speaker
+                this.audio_format = AudioFormat.CHANNEL_IN_MONO;
+                break;
+            default:
+                this.audio_format = AudioFormat.CHANNEL_IN_STEREO;
+                break;
+        }
+        return this;
+    }
+
     public String getSavePath(){
         return this.save_path;
     }
 
     public WaveRecorder build(){
         // build objects
-        this.buf_size = AudioRecord.getMinBufferSize(this.samp_rate, AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT);
+        this.buf_size = AudioRecord.getMinBufferSize(this.samp_rate, this.audio_format, AudioFormat.ENCODING_PCM_16BIT);
         this.audioRecord = new AudioRecord(MediaRecorder.AudioSource.DEFAULT, this.samp_rate,
-                AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT, this.buf_size);
+                this.audio_format, AudioFormat.ENCODING_PCM_16BIT, this.buf_size);
         // create file
         File file = new File(this.path_prefix+this.save_path);
         if(file.exists()){

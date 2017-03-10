@@ -101,6 +101,7 @@ public class GenRecTask extends AsyncTask<Integer, Integer, String> {
                 .build();
         this.waveRecorder.setSampRate(samp_rate_rec)
                 .setSavePath(save_path)
+                .setRecMode(out_mode)
                 .build();
         this.waveGenerator.play();
         this.waveRecorder.record();
